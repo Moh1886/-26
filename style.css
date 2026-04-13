@@ -1,0 +1,771 @@
+/* 
+   =================================================
+   NOUR AL-ISLAM - CORE DESIGN SYSTEM (v3.0)
+   =================================================
+*/
+
+:root {
+    /* Emerald & Gold Palette */
+    --emerald-900: #064e3b;
+    --emerald-800: #065f46;
+    --emerald-700: #047857;
+    --emerald-600: #059669;
+    --emerald-500: #10b981;
+    --gold-500: #fbbf24;
+    --gold-600: #d97706;
+    --gold-400: #fcd34d;
+    
+    /* Dark Theme Base */
+    --bg-darker: #020617;
+    --bg-dark: #0f172a;
+    --card-bg: rgba(15, 23, 42, 0.7);
+    --glass: rgba(15, 23, 42, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glow: rgba(16, 185, 129, 0.15);
+    
+    /* Typography */
+    --font-arabic: 'Amiri', serif;
+    --font-ui: 'Cairo', sans-serif;
+    
+    /* Spacing & Effects */
+    --radius: 24px;
+    --radius-sm: 12px;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-darker);
+    color: #f8fafc;
+    font-family: var(--font-ui);
+    direction: rtl;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 0% 0%, var(--emerald-900), transparent 40%),
+        radial-gradient(circle at 100% 100%, #1e1b4b, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(6, 78, 59, 0.2), transparent 70%);
+    z-index: -1;
+}
+
+.hidden { display: none !important; }
+
+/* Splash Screen */
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-darker);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+#splash-screen.fade-out {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+}
+
+.splash-logo {
+    font-size: 100px;
+    margin-bottom: 30px;
+    animation: floating 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px var(--emerald-500));
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0) scale(1.0); }
+    50% { transform: translateY(-20px) scale(1.05); }
+}
+
+.splash-loader {
+    width: 200px;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 99px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.loader-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--emerald-500), var(--gold-500));
+    width: 0;
+    border-radius: 99px;
+    box-shadow: 0 0 20px var(--emerald-500);
+}
+
+/* App Container */
+#app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Header */
+.app-header {
+    padding: 24px 20px;
+    background: var(--glass);
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.user-welcome h1 {
+    font-size: 20px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gold-500), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.user-welcome p {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.prayer-time-top {
+    text-align: left;
+}
+
+.prayer-time-top #next-prayer-label {
+    font-size: 11px;
+    color: var(--emerald-500);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.prayer-time-top #next-prayer-countdown {
+    font-size: 22px;
+    font-weight: 900;
+    font-family: monospace;
+}
+
+/* Main Content Area */
+.main-view {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 100px; /* Space for nav */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.main-view::-webkit-scrollbar { display: none; }
+
+.section-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 25px 5px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--glass-border), transparent);
+}
+
+/* Generic Cards */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.card:active {
+    transform: scale(0.98);
+    border-color: var(--emerald-500);
+}
+
+/* Prayer Banner Dashboard */
+.prayer-dashboard {
+    background: linear-gradient(135deg, var(--emerald-900), #020617);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 15px;
+}
+
+.prayer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 5px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.prayer-item.active {
+    background: var(--glow);
+    border: 1px solid var(--emerald-500);
+    transform: translateY(-5px);
+}
+
+.prayer-item span:first-child {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+.prayer-item span:last-child {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+/* Feature Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.feature-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.feature-btn:active { transform: scale(0.95); }
+
+.feature-icon {
+    font-size: 40px;
+    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.3));
+}
+
+.feature-title {
+    font-weight: 800;
+    font-size: 16px;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    height: 70px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 35px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.nav-item i {
+    font-size: 22px;
+    transition: var(--transition);
+}
+
+.nav-item.active {
+    color: var(--gold-500);
+}
+
+.nav-item.active i {
+    transform: translateY(-5px);
+    filter: drop-shadow(0 0 10px var(--gold-500));
+}
+
+/* Azkar List View */
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.list-item:active { background: var(--glow); }
+
+.item-main {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.item-icon {
+    width: 45px;
+    height: 45px;
+    background: var(--emerald-900);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.item-text h4 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.item-text p {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* Zekr Reading Card */
+.zekr-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 30px 25px;
+    margin-bottom: 25px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.zekr-arabic {
+    font-family: var(--font-arabic);
+    font-size: 26px;
+    line-height: 2.0;
+    margin-bottom: 20px;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.zekr-count-btn {
+    background: linear-gradient(135deg, var(--emerald-700), var(--emerald-900));
+    border: none;
+    padding: 15px 40px;
+    border-radius: 99px;
+    color: white;
+    font-weight: 900;
+    font-size: 18px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 25px rgba(6, 78, 59, 0.4);
+    transition: var(--transition);
+}
+
+.zekr-count-btn:active { transform: scale(0.9); }
+.zekr-count-btn.done { 
+    background: #1e293b; 
+    color: #64748b; 
+    box-shadow: none;
+    cursor: default;
+}
+
+/* Quran Reader */
+.surah-header {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.surah-title-arabic {
+    font-family: var(--font-arabic);
+    font-size: 45px;
+    color: var(--gold-500);
+    margin-bottom: 10px;
+}
+
+.quran-text {
+    font-family: var(--font-arabic);
+    font-size: 28px;
+    line-height: 2.5;
+    text-align: justify;
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: var(--radius);
+}
+
+.ayah-num {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gold-500);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin: 0 8px;
+    color: var(--gold-500);
+    font-family: var(--font-ui);
+}
+
+/* Tasbih View */
+.tasbih-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+}
+
+.tasbih-circle {
+    width: 280px;
+    height: 280px;
+    background: var(--card-bg);
+    border-radius: 50%;
+    border: 5px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5), inset 0 0 30px rgba(16, 185, 129, 0.1);
+    transition: var(--transition);
+}
+
+.tasbih-circle:active {
+    transform: scale(0.92);
+    border-color: var(--emerald-500);
+    box-shadow: 0 0 80px rgba(16, 185, 129, 0.3);
+}
+
+.tasbih-count {
+    font-size: 70px;
+    font-weight: 900;
+    color: var(--gold-500);
+}
+
+.tasbih-label {
+    font-size: 16px;
+    color: #94a3b8;
+    margin-top: -10px;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+    animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--emerald-800);
+    padding: 12px 24px;
+    border-radius: 99px;
+    font-weight: 700;
+    z-index: 10000;
+    transition: var(--transition);
+    opacity: 0;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Reader Header */
+.reader-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+.reader-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* Icon Button Fixes */
+.icon-btn {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.icon-btn:active { transform: scale(0.9); background: var(--glow); }
+
+.icon-btn.small {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+}
+
+/* Names of Allah Grid */
+.names-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    padding: 10px 0;
+}
+
+.name-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 15px 10px;
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.name-item:hover, .name-item:active {
+    background: var(--glow);
+    border-color: var(--gold-500);
+}
+
+.name-arabic {
+    font-family: var(--font-arabic);
+    font-size: 22px;
+    color: var(--gold-500);
+    margin-bottom: 5px;
+}
+
+.name-mean {
+    font-size: 10px;
+    color: #94a3b8;
+    line-height: 1.3;
+}
+
+/* Card Actions */
+.card-actions-top {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.azkar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Azkar Card Components */
+.card-count-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--emerald-900);
+    border: 1px solid var(--emerald-500);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--emerald-500);
+}
+
+.zekr-bless {
+    font-size: 14px;
+    color: var(--gold-400);
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+.card-footer .source {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.count-btn {
+    background: linear-gradient(135deg, var(--emerald-700), var(--emerald-900));
+    border: none;
+    padding: 12px 35px;
+    border-radius: 99px;
+    color: white;
+    font-weight: 900;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(6, 78, 59, 0.4);
+    transition: var(--transition);
+}
+
+.count-btn:active { transform: scale(0.9); }
+.count-btn.done {
+    background: #1e293b;
+    color: var(--emerald-500);
+    box-shadow: none;
+    cursor: default;
+    font-size: 14px;
+}
+
+/* Bismillah Header */
+.bismillah-header {
+    font-family: var(--font-arabic);
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--gold-500);
+    text-align: center;
+    padding: 30px 0;
+    margin: 20px 0;
+    border-bottom: 1px solid var(--glass-border);
+    background: linear-gradient(to bottom, transparent, rgba(251, 191, 36, 0.05), transparent);
+}
+
+/* Athan Top Notification Banner */
+.athan-notification-banner {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 24px;
+    z-index: 10000;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.1);
+    transform: translateY(-150%);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: slide-in-top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slide-in-top {
+    to { transform: translateY(0); }
+}
+
+.athan-banner-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.athan-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.athan-dot {
+    width: 10px;
+    height: 10px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse-red 1s infinite;
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.athan-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px 15px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.iqama-countdown-small {
+    text-align: right;
+}
+
+.iqama-countdown-small h4 {
+    color: var(--emerald-400);
+    font-size: 20px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.stop-btn-minimal {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
